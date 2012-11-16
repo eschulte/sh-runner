@@ -1,0 +1,20 @@
+A Utility to Run Large Numbers of Shell Commands Protecting from Errors
+
+Usage
+
+  1. Start up the ./foreman script which oversees all work to be done.
+     Pass it a single command line argument which will set the maximum
+     time for which any job will be allowed to run.
+
+  2. Write jobs to files in the work/ directory with the .run
+     extension. E.g.,
+
+       $ echo "uname -a" > work/foo.run
+
+  3. When these command completes the results will be written to a
+     file in the work/ directory with the .run extension is replaced
+     with .done.  The first line of this file will holds the numeric
+     exit code of the command, the remainder of the file will hold the
+     output to STDOUT (if any).
+
+       $ cat work/foo.done

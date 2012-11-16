@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Keeps things running...
+#
+WORKDIR=$(dirname $0)/work/
+if [ -z "$1" ];then
+    echo "must specify a work time limit">&2;
+    exit 1;
+else
+    TIMEOUT="$1"
+fi
+
+spawn(){
+    local name=$1;
+    local in=${name}.run;
+    local working=${name}.working;
+    local out=${name}.done;
+    mv $in $working
+    timeout $TIMEOUT sh $working > $out
+    echo $? >> $out
+    rm $working
+}
+
+pushd $WORKDIR
+function exit_hook (){
+    local left=$(ls *.run *.working 2>/dev/null|wc -l)
+    if [ $left -eq 0 ];then
+        exit 0
+    else
+        echo "" >&2;
+        echo "$left active jobs" >&2;
+    fi
+}
+trap exit_hook SIGHUP SIGINT SIGTERM
+
+
+for ((;;));do
+    for new in $(ls --color=never *.run 2>/dev/null);do
+        if [ -f "${new%.run}.done" ];then
+            echo "${new} has already been run">&2
+            rm "${new}"
+        else
+            spawn "${new%.run}">/dev/null 2>/dev/null </dev/null &
+        fi
+    done
+    sleep 0.25;
+done
+popd
