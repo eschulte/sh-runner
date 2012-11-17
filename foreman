@@ -14,10 +14,12 @@ spawn(){
     local name=$1;
     local in=${name}.run;
     local working=${name}.working;
+    local tmp=${name}.tmp;
     local out=${name}.done;
     mv $in $working
-    timeout $TIMEOUT sh $working > $out
-    echo $? >> $out
+    timeout $TIMEOUT sh $working > $tmp
+    echo $? >> $tmp
+    mv $tmp $out
     rm $working
 }
 
