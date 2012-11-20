@@ -35,7 +35,6 @@ function exit_hook (){
 }
 trap exit_hook SIGHUP SIGINT SIGTERM
 
-
 for ((;;));do
     for new in $(ls --color=never *.run 2>/dev/null);do
         if [ -f "${new%.run}.done" ];then
@@ -45,6 +44,6 @@ for ((;;));do
             spawn "${new%.run}">/dev/null 2>/dev/null </dev/null &
         fi
     done
-    sleep 0.25;
+    sleep 0.05;
 done
 popd
