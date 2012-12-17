@@ -2,12 +2,20 @@
 #
 # Keeps things running...
 #
+# Usage: foreman TIMEOUT [optional delay between checks]
+#
 WORKDIR=$(dirname $0)/work/
+
 if [ -z "$1" ];then
     echo "must specify a work time limit">&2;
     exit 1;
 else
     TIMEOUT="$1"
+fi
+if [ -z "$2" ];then
+    DELAY=0.05
+else
+    DELAY=$2
 fi
 
 spawn(){
@@ -44,6 +52,6 @@ for ((;;));do
             spawn "${new%.run}">/dev/null 2>/dev/null </dev/null &
         fi
     done
-    sleep 0.05;
+    sleep $DELAY;
 done
 popd
