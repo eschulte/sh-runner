@@ -5,7 +5,6 @@
 # Usage: foreman TIMEOUT [optional delay between checks]
 #
 WORKDIR=$(dirname $0)/work/
-RUNDIR="${WORKDIR}../.."
 
 if [ -z "$1" ];then
     echo "must specify a work time limit">&2;
@@ -26,9 +25,9 @@ spawn(){
     local tmp=${name}.tmp;
     local out=${name}.done;
     mv $in $working
-    pushd "$RUNDIR" >/dev/null
-    timeout $TIMEOUT sh $working > "${WORKDIR}/${tmp}"
-    popd >/dev/null
+    pushd "../.."
+    timeout $TIMEOUT sh "sh-runner/work/$working" > "sh-runner/work/${tmp}"
+    popd
     echo $? >> $tmp
     mv $tmp $out
     rm $working
