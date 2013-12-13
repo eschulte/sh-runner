@@ -27,8 +27,8 @@ spawn(){
     mv $in $working
     pushd "../.."
     timeout $TIMEOUT sh "sh-runner/work/$working" > "sh-runner/work/${tmp}"
+    echo $? >> "sh-runner/work/${tmp}"
     popd
-    echo $? >> $tmp
     mv $tmp $out
     rm $working
 }
